@@ -20,10 +20,7 @@ public class Request {
     }
 
     public String print(){
-        return "from current: " + currentFloor
-                + "to: " + nextFloor
-                + ", " + direction
-                + "";
+        return "from current: " + currentFloor + "to: " + nextFloor + ", " + direction + ".";
     }
 
     public int getCurrentFloor() {

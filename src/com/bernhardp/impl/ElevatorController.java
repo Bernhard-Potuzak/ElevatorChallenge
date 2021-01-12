@@ -41,15 +41,25 @@ public class ElevatorController implements ElevatorControllerFactory {
 
             executor.submit(() -> {
                 print(freeElevator, "starts moving", nextElevatorRequest);
-                trySleep(calculateElevatorMovementDelay(nextElevatorRequest, freeElevator));
+                //TODO: Change this part
+                try {
+                    Thread.sleep(calculateElevatorMovementDelay(nextElevatorRequest, freeElevator));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
                 freeElevator.setCurrentFloor(nextElevatorRequest.getNextFloor());
-                /*if(nextElevatorRequest.getNextFloor() < freeElevator.getCurrentFloor())
+                if(nextElevatorRequest.getNextFloor() < freeElevator.getCurrentFloor())
                     freeElevator.setStatus(ElevatorDirection.ELEVATOR_DOWN);
                 if(nextElevatorRequest.getNextFloor() > freeElevator.getCurrentFloor())
-                    freeElevator.setStatus(ElevatorDirection.ELEVATOR_UP);*/
-                tryPut(freeElevator);
+                    freeElevator.setStatus(ElevatorDirection.ELEVATOR_UP);
+                try {
+                    elevatorList.put(freeElevator);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 print(freeElevator, "arrived at destination", nextElevatorRequest);
+                freeElevator.setStatus(ElevatorDirection.ELEVATOR_HOLD);
             });
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -58,6 +68,19 @@ public class ElevatorController implements ElevatorControllerFactory {
 
     private void print(final Elevator elevator, final String printStatement, final Request request){
         System.out.printf("%s - %s - %s.\n", elevator.print(), printStatement, request.print());
+        Elevator value;
+        BlockingQueue<Elevator> checkList = elevatorList;
+//        while ((value=checkList.poll())!=null){
+//            if(value.getStatus()=="ELEVATOR_HOLD"){
+//                System.out.println("Elevator " + value.getElevatorId() + " is available");
+//            }
+//        }
+        Iterator iteratorValues = elevatorList.iterator();
+
+        // Print elements of iterator
+        while (iteratorValues.hasNext()) {
+            System.out.println("Free elevator(s): " + iteratorValues.next());
+        }
     }
 
     @Override
@@ -66,21 +89,6 @@ public class ElevatorController implements ElevatorControllerFactory {
         requests.put(request);
     }
 
-    private void trySleep(final long millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void tryPut(final Elevator freeElevator) {
-        try {
-            elevatorList.put(freeElevator);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
     private long calculateElevatorMovementDelay(final Request nextElevatorRequest, final Elevator freeElevator) {
         // Wait until the elevator arrives to the floor where the request was made from.
@@ -91,10 +99,12 @@ public class ElevatorController implements ElevatorControllerFactory {
         return TimeUnit.SECONDS.toMillis(secondsToWaitUntilElevatorArrivesAtOrigin + secondsToWaitUntilElevatorArrivesAtDestination);
     }
 
+    //TODO: implement checking for available elevators
     @Override
     public void checkAvailableElevators() {
         Elevator value;
-        while ((value=elevatorList.poll())!=null){
+        BlockingQueue<Elevator> checkList = elevatorList;
+        while ((value=checkList.poll())!=null){
             if(value.getStatus()=="ELEVATOR_HOLD"){
                 System.out.println("Elevator " + value.getElevatorId() + " is available");
             }

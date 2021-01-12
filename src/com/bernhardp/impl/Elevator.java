@@ -3,9 +3,8 @@ package com.bernhardp.impl;
 import com.bernhardp.interfaces.ElevatorFactory;
 import com.bernhardp.utils.Constants;
 import com.bernhardp.utils.ElevatorDirection;
-import com.bernhardp.utils.IdGenerator;
+import com.bernhardp.utils.IdCounter;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.stream.Collectors;
@@ -19,7 +18,7 @@ public class Elevator implements ElevatorFactory {
     public ElevatorDirection status;
 
     public Elevator() {
-        this.id = IdGenerator.getInstance().getNextElevatorId();;
+        this.id = IdCounter.getInstance().generateNextId();;
         this.currentFloor = 0;
         this.status = ElevatorDirection.ELEVATOR_HOLD;
     }
@@ -38,7 +37,7 @@ public class Elevator implements ElevatorFactory {
         return this.id;
     }
 
-    public void moveElevator(){
+/*    public void moveElevator(){
         while(status != ElevatorDirection.ELEVATOR_HOLD){
             if(this.status==ElevatorDirection.ELEVATOR_UP){
                 System.out.println("status is up");
@@ -67,7 +66,7 @@ public class Elevator implements ElevatorFactory {
                 status = ElevatorDirection.ELEVATOR_HOLD;
             }
         }
-    }
+    }*/
 
     public String getStatus(){
         return this.status.toString();
@@ -93,6 +92,7 @@ public class Elevator implements ElevatorFactory {
         return "Elevator(id: " + id + ", currentFloor: " + currentFloor + ")";
     }
 
+    //TODO: change this
     public static List<Elevator> getElevators() {
         return IntStream.range(0, Constants.NUMBER_OF_ELEVATORS)
                 .mapToObj(i -> new Elevator())
@@ -105,15 +105,12 @@ public class Elevator implements ElevatorFactory {
         System.out.println("Next floor for elevator " + this.id + " is " +floor);
         System.out.println(this.nextFloors.peek());
         if(this.nextFloors.peek() > currentFloor){
-            System.out.println("smalelr");
             this.status = ElevatorDirection.ELEVATOR_UP;
         }
         if(this.nextFloors.peek() < currentFloor){
-            System.out.println("bigger");
             this.status = ElevatorDirection.ELEVATOR_DOWN;
         }
         System.out.println(this.status);
-        moveElevator();
 
     }
 
