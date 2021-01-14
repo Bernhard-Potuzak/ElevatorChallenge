@@ -12,8 +12,8 @@ import java.util.stream.IntStream;
 
 
 public class Elevator implements ElevatorFactory {
-    private Integer currentFloor;
-    public Integer id;
+    private int currentFloor;
+    public int id;
     private Queue<Integer> nextFloors;
     public ElevatorDirection status;
 
@@ -33,40 +33,10 @@ public class Elevator implements ElevatorFactory {
         currentFloor--;
     }
 
-    public Integer getElevatorId(){
+    public int getElevatorId(){
         return this.id;
     }
 
-/*    public void moveElevator(){
-        while(status != ElevatorDirection.ELEVATOR_HOLD){
-            if(this.status==ElevatorDirection.ELEVATOR_UP){
-                System.out.println("status is up");
-                if(currentFloor != nextFloor()) {
-                    moveUp();
-                    System.out.println("current floor: " + currentFloor);
-                }
-                if(currentFloor == nextFloor()){
-                    System.out.println("Floor reached");
-                    nextFloors.poll();
-                    //status = ElevatorDirection.ELEVATOR_HOLD;
-                }
-            }
-            if(this.status==ElevatorDirection.ELEVATOR_DOWN){
-                if(currentFloor != nextFloor()) {
-                    moveDown();
-                    System.out.println("current floor: " + currentFloor);
-                }
-                if(currentFloor == nextFloor()){
-                    System.out.println("Floor reached");
-                    nextFloors.poll();
-                    //status = ElevatorDirection.ELEVATOR_HOLD;
-                }
-            }
-            if(this.nextFloors.isEmpty()){
-                status = ElevatorDirection.ELEVATOR_HOLD;
-            }
-        }
-    }*/
 
     public String getStatus(){
         return this.status.toString();
@@ -76,42 +46,24 @@ public class Elevator implements ElevatorFactory {
         return this.nextFloors.peek();
     }
 
+    @Override
     public int getCurrentFloor(){
         return this.currentFloor;
     }
 
+    @Override
     public void setCurrentFloor(int currentFloor){
         this.currentFloor = currentFloor;
     }
 
+    @Override
     public void setStatus(ElevatorDirection status){
         this.status = status;
     }
 
+    @Override
     public String print(){
         return "Elevator(id: " + id + ", currentFloor: " + currentFloor + ")";
-    }
-
-    //TODO: change this
-    public static List<Elevator> getElevators() {
-        return IntStream.range(0, Constants.NUMBER_OF_ELEVATORS)
-                .mapToObj(i -> new Elevator())
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public void addNewFloor(Integer floor) {
-        this.nextFloors.add(floor);
-        System.out.println("Next floor for elevator " + this.id + " is " +floor);
-        System.out.println(this.nextFloors.peek());
-        if(this.nextFloors.peek() > currentFloor){
-            this.status = ElevatorDirection.ELEVATOR_UP;
-        }
-        if(this.nextFloors.peek() < currentFloor){
-            this.status = ElevatorDirection.ELEVATOR_DOWN;
-        }
-        System.out.println(this.status);
-
     }
 
 

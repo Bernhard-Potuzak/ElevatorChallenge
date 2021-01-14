@@ -1,6 +1,6 @@
 package com.bernhardp.utils;
 
-//TODO: change this so this is not needed
+/**counter to increment the id of the elevators automatically */
 public class IdCounter {
     private static IdCounter instance = null;
 

@@ -1,6 +1,8 @@
 package com.bernhardp.impl;
 
-public class Request {
+import com.bernhardp.interfaces.RequestFactory;
+
+public class Request implements RequestFactory {
     public enum Direction{
         UP,
         DOWN
@@ -19,19 +21,19 @@ public class Request {
             this.direction = Direction.DOWN;
     }
 
+    @Override
     public String print(){
-        return "from current: " + currentFloor + "to: " + nextFloor + ", " + direction + ".";
+        return "from current: " + currentFloor + " to: " + nextFloor + ", " + direction + ".";
     }
 
+    @Override
     public int getCurrentFloor() {
         return currentFloor;
     }
 
+    @Override
     public int getNextFloor() {
         return nextFloor;
     }
 
-    public Direction getDirection() {
-        return direction;
-    }
 }

@@ -20,8 +20,6 @@ public class Main {
         controller.addRequest(12,2);
         controller.addRequest(19,7);
         controller.addRequest(0,4);
-        controller.checkAvailableElevators();
-
 
     }
 }
